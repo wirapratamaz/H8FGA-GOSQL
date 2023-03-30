@@ -74,6 +74,43 @@ func GetEmployee() {
 	fmt.Println("Employee datas : ", results)
 }
 
+func UpdateEmployee() {
+	sqlStatement := `UPDATE employees
+	SET full_name = $2, email = $3, division = $4, age = $5
+	WHERE id = $1;
+	`
+
+	res, err := db.Exec(sqlStatement, 1, "Arirell Jodan Hidayat", "aireljodan@gmail.com", "Backend", 24)
+
+	if err != nil {
+		panic(err)
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Updated data amount :", count)
+}
+
+func DeleteEmployee() {
+	sqlStatement := `
+	DELETE from employees
+	WHERE id = $1;
+	`
+
+	res, err := db.Exec(sqlStatement, 1)
+	if err != nil {
+		panic(err)
+	}
+	count, err := res.RowsAffected()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Delete data amount :", count)
+}
+
 func main() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -96,4 +133,8 @@ func main() {
 	CreateEmployee()
 	//GET DATA
 	GetEmployee()
+	//UPDATE DATA
+	UpdateEmployee()
+	//DELETE DATA
+	DeleteEmployee()
 }
