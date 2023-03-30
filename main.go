@@ -47,6 +47,33 @@ func CreateEmployee() {
 	fmt.Printf("New Employee Data: %v\n", employee)
 }
 
+func GetEmployee() {
+	var results = []Employee{}
+
+	sqlStatement := `SELECT * FROM employees`
+
+	rows, err := db.Query(sqlStatement)
+
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var employee = Employee{}
+
+		err = rows.Scan(&employee.ID, &employee.Full_name, &employee.Email, &employee.Age, &employee.Division)
+
+		if err != nil {
+			panic(err)
+		}
+
+		results = append(results, employee)
+	}
+
+	fmt.Println("Employee datas : ", results)
+}
+
 func main() {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
@@ -67,4 +94,6 @@ func main() {
 
 	//CREATE DATA
 	CreateEmployee()
+	//GET DATA
+	GetEmployee()
 }
